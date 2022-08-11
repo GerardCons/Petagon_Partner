@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "839059749691",
+    "firebase_url": "https://petagonapp-flutter-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "petagonapp-flutter",
+    "storage_bucket": "petagonapp-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839059749691:android:1f008f2201d36722a7951e",
+        "android_client_info": {
+          "package_name": "com.example.petagon_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwRC7j0ZN0L5l34QeejH9rniyyVcqcnkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "839059749691-2hbuvmodqkktu7k15drt9fdi71ceu3o5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petagon.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839059749691:android:ede905fb7dc33cbda7951e",
+        "android_client_info": {
+          "package_name": "com.example.petagonv0_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839059749691-8n0ubr7bj9tudens733g5tmhjig7j5l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petagonv0_flutter",
+            "certificate_hash": "247b1b526e27710275e9fa68f6e2e48d49c6e3f2"
+          }
+        },
+        {
+          "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwRC7j0ZN0L5l34QeejH9rniyyVcqcnkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "839059749691-2hbuvmodqkktu7k15drt9fdi71ceu3o5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petagon.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839059749691:android:280c85153b76fa98a7951e",
+        "android_client_info": {
+          "package_name": "com.petagon.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwRC7j0ZN0L5l34QeejH9rniyyVcqcnkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839059749691-ktq04s7c0120dr1a99n3hnm7klcugmek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "839059749691-2hbuvmodqkktu7k15drt9fdi71ceu3o5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petagon.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
