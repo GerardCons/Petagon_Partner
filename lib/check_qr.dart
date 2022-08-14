@@ -6,7 +6,9 @@ import 'package:petagon_admin/model/infosheet.dart';
 
 class CheckQrPage extends StatefulWidget {
   final String petID;
-  const CheckQrPage({Key? key, required this.petID}) : super(key: key);
+  final String partnerName;
+  const CheckQrPage({Key? key, required this.petID, required this.partnerName})
+      : super(key: key);
 
   @override
   State<CheckQrPage> createState() => _CheckQrPageState();
@@ -25,7 +27,9 @@ class _CheckQrPageState extends State<CheckQrPage> {
             } else if (snapshot.hasData) {
               final pet = snapshot.data!;
               if (pet.isEmpty) {
-                return const InvalidQrPage();
+                return InvalidQrPage(
+                  partnerName: widget.partnerName,
+                );
               } else {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +48,7 @@ class _CheckQrPageState extends State<CheckQrPage> {
                       onTap: () async {
                         final docInfo = FirebaseFirestore.instance
                             .collection('Cocos South Bistro')
-                            .doc(pet.first.infoID);
+                            .doc(pet.first.petID);
                         final infoSheet = InfoSheet(
                           infoID: pet.first.infoID,
                           ownerID: pet.first.infoID,
@@ -81,7 +85,9 @@ class _CheckQrPageState extends State<CheckQrPage> {
                         final json = infoSheet.toJson();
                         await docInfo.set(json);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const HomePageScreen()));
+                            builder: (context) => HomePageScreen(
+                                  partnerName: widget.partnerName,
+                                )));
                       },
                       borderRadius: BorderRadius.circular(30),
                       child: Container(

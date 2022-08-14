@@ -5,7 +5,8 @@ import 'package:petagon_admin/check_qr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQrCodePage extends StatefulWidget {
-  const ScanQrCodePage({Key? key}) : super(key: key);
+  final String partnerName;
+  const ScanQrCodePage({Key? key, required this.partnerName}) : super(key: key);
 
   @override
   State<ScanQrCodePage> createState() => _ScanQrCodePageState();
@@ -71,6 +72,7 @@ class _ScanQrCodePageState extends State<ScanQrCodePage> {
           barcode = qrcode;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => CheckQrPage(
+                    partnerName: widget.partnerName,
                     petID: barcode!.code!,
                   )));
         }));

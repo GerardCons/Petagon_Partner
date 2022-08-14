@@ -5,7 +5,8 @@ import 'package:petagon_admin/model/infosheet.dart';
 import 'package:petagon_admin/qr_scanner.dart';
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({Key? key}) : super(key: key);
+  final String partnerName;
+  const HomePageScreen({Key? key, required this.partnerName}) : super(key: key);
 
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
@@ -18,12 +19,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade600,
         foregroundColor: Colors.white,
-        title: const Center(
+        title: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 30),
+            padding: const EdgeInsets.only(left: 30),
             child: Text(
-              'Cocos South Bistro',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              widget.partnerName,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
         ),
@@ -39,7 +40,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
             child: const Icon(Icons.qr_code_scanner),
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const ScanQrCodePage()));
+                  builder: (context) => ScanQrCodePage(
+                        partnerName: widget.partnerName,
+                      )));
             }),
       ),
       body: SafeArea(
@@ -68,7 +71,11 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget buildPets(InfoSheet info) => GestureDetector(
       onTap: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => InfoSheetPage(petID: info.petID.toString())));
+            builder: (context) => InfoSheetPage(
+                  petID: info.petID.toString(),
+                  infoID: info.infoID,
+                  partnerName: widget.partnerName,
+                )));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -141,7 +148,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   Stream<List<InfoSheet>> readInfoPage() {
     return FirebaseFirestore.instance
-        .collection('Cocos South Bistro')
+        .collection(widget.partnerName)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => InfoSheet.fromJson(doc.data()))

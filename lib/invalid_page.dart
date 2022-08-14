@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:petagon_admin/homepage.dart';
 
 class InvalidQrPage extends StatefulWidget {
-  const InvalidQrPage({Key? key}) : super(key: key);
+  final String partnerName;
+  const InvalidQrPage({Key? key, required this.partnerName}) : super(key: key);
 
   @override
   State<InvalidQrPage> createState() => _InvalidQrPageState();
@@ -29,7 +30,9 @@ class _InvalidQrPageState extends State<InvalidQrPage> {
           InkWell(
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const HomePageScreen()));
+                  builder: (context) => HomePageScreen(
+                        partnerName: widget.partnerName,
+                      )));
             },
             borderRadius: BorderRadius.circular(30),
             child: Container(

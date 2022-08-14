@@ -4,11 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petagon_admin/homepage.dart';
 import 'package:petagon_admin/model/infosheet.dart';
+import 'package:petagon_admin/reportpet.dart';
 
 // ignore: camel_case_types
 class InfoSheetPage extends StatefulWidget {
+  final String partnerName;
   final String petID;
-  const InfoSheetPage({Key? key, required this.petID}) : super(key: key);
+  final String infoID;
+  const InfoSheetPage(
+      {Key? key,
+      required this.petID,
+      required this.infoID,
+      required this.partnerName})
+      : super(key: key);
   @override
   State<InfoSheetPage> createState() => _InfoSheetPageState(petID);
 }
@@ -27,16 +35,57 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
       home: Scaffold(
         extendBody: true,
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: (() {
+              final collection =
+                  FirebaseFirestore.instance.collection(widget.partnerName);
+              collection
+                  .doc(widget.petID) // <-- Doc ID to be deleted.
+                  .delete() // <-- Delete
+                  .then((_) => print('Deleted'))
+                  .catchError((error) => print('Delete failed: $error'));
+
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => HomePageScreen(
+                        partnerName: widget.partnerName,
+                      )));
+            }),
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+          ),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const HomePageScreen()));
-                },
-                icon: const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ))
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => ReportPageScreen(
+                              petID: widget.petID,
+                              infoID: widget.infoID,
+                              partnerName: widget.partnerName,
+                            )));
+                  },
+                  icon: const Icon(
+                    Icons.report,
+                    color: Colors.white,
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => HomePageScreen(
+                              partnerName: widget.partnerName,
+                            )));
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )),
+            )
           ],
           centerTitle: true,
           title: const Text(
