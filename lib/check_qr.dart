@@ -47,7 +47,7 @@ class _CheckQrPageState extends State<CheckQrPage> {
                     InkWell(
                       onTap: () async {
                         final docInfo = FirebaseFirestore.instance
-                            .collection('Cocos South Bistro')
+                            .collection(widget.partnerName)
                             .doc(pet.first.petID);
                         final infoSheet = InfoSheet(
                           infoID: pet.first.infoID,
