@@ -22,7 +22,7 @@ class _VerifyPartnerPageState extends State<VerifyPartnerPage> {
           stream: readPartners(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Text('Something Went Wrong');
+              return Text('Something Went Wrong ${snapshot.error}');
             } else if (snapshot.hasData) {
               final partner = snapshot.data!;
               return HomePageScreen(partnerName: partner.first.name);
@@ -35,12 +35,13 @@ class _VerifyPartnerPageState extends State<VerifyPartnerPage> {
   }
 
   Stream<List<Partners>> readPartners() {
+    print(user.email);
     return FirebaseFirestore.instance
-        .collection('Petagon Partners')
+        .collection('Place Directory')
         .snapshots()
         .map((snapshot) => snapshot.docs
             .where((QueryDocumentSnapshot<Object?> element) =>
-                element['partnerID'].toString().contains(user.uid))
+                element['loginEmail'].contains(user.email))
             .map((doc) => Partners.fromJson(doc.data()))
             .toList());
   }

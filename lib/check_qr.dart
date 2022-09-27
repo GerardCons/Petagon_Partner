@@ -23,7 +23,7 @@ class _CheckQrPageState extends State<CheckQrPage> {
           stream: readInfoPage(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Text('Something Went Wrong');
+              return Text('Something Went Wrong: ${snapshot.error}');
             } else if (snapshot.hasData) {
               final pet = snapshot.data!;
               if (pet.isEmpty) {
@@ -37,6 +37,7 @@ class _CheckQrPageState extends State<CheckQrPage> {
                     Center(
                       child: Text(
                         "Welcome to Petagon ${pet.first.petName}",
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -49,41 +50,41 @@ class _CheckQrPageState extends State<CheckQrPage> {
                         final docInfo = FirebaseFirestore.instance
                             .collection(widget.partnerName)
                             .doc(pet.first.petID);
-                        final infoSheet = InfoSheet(
-                          infoID: pet.first.infoID,
-                          ownerID: pet.first.infoID,
-                          firstname: pet.first.firstname,
-                          ownerImageUrl: pet.first.ownerImageUrl,
-                          lastname: pet.first.lastname,
-                          email: pet.first.email,
-                          mobile: pet.first.mobile,
-                          address: pet.first.address,
-                          petID: pet.first.petID,
-                          petImageUrl: pet.first.petImageUrl,
-                          age: pet.first.age,
-                          pendingReports: pet.first.pendingReports,
-                          isVaccinated: pet.first.isVaccinated,
-                          isVerified: pet.first.isVerified,
-                          isPCCIRegistered: pet.first.isPCCIRegistered,
-                          petName: pet.first.petName,
-                          petKind: pet.first.petKind,
-                          petBreed: pet.first.petBreed,
-                          petGender: pet.first.petGender,
-                          petDOB: pet.first.petDOB,
-                          vacRecord_distemper: pet.first.vacRecord_distemper,
-                          vacRecord_hepatitis: pet.first.vacRecord_hepatitis,
-                          vacRecord_parvovirus: pet.first.vacRecord_parvovirus,
-                          vacRecord_rabies: pet.first.vacRecord_rabies,
-                          vacRecord_kennelCough:
-                              pet.first.vacRecord_kennelCough,
-                          vacRecord_felinedistemper:
-                              pet.first.vacRecord_felinedistemper,
-                          vacRecord_rhinotracheitis:
-                              pet.first.vacRecord_rhinotracheitis,
-                          vacRecord_calicvirus: pet.first.vacRecord_calicvirus,
-                        );
-                        final json = infoSheet.toJson();
-                        await docInfo.set(json);
+
+                        List<dynamic> vaccines = [];
+                        String isVaccinated = 'isVaccinated';
+                        String recordName = 'recordName';
+                        for (int i = 0; i < pet.first.vaccines.length; i++) {
+                          vaccines.add({
+                            isVaccinated: pet.first.vaccines[i].isVaccinated,
+                            recordName: pet.first.vaccines[i].recordName,
+                          });
+                        }
+                        final infoSheet = {
+                          "infoID": pet.first.infoID,
+                          "ownerID": pet.first.ownerID,
+                          "firstName": pet.first.firstname,
+                          "imageUrl": pet.first.ownerImageUrl,
+                          "lastName": pet.first.lastname,
+                          "email": pet.first.email,
+                          "contactNumber": pet.first.mobile,
+                          "address": pet.first.address,
+                          "petId": pet.first.petID,
+                          "petImageUrl": pet.first.petImageUrl,
+                          "age": pet.first.age,
+                          "pendingReports": pet.first.pendingReports,
+                          "isVaccinated": pet.first.isVaccinated,
+                          "isVerified": pet.first.isVerified,
+                          "isPCCIRegistered": pet.first.isPCCIRegistered,
+                          "petName": pet.first.petName,
+                          "petKind": pet.first.petKind,
+                          "petBreed": pet.first.petBreed,
+                          "petGender": pet.first.petGender,
+                          "petDOB": pet.first.petDOB,
+                          "vaccineRecords": vaccines,
+                        };
+
+                        await docInfo.set(infoSheet);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => HomePageScreen(
                                   partnerName: widget.partnerName,
@@ -124,7 +125,7 @@ class _CheckQrPageState extends State<CheckQrPage> {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .where((QueryDocumentSnapshot<Object?> element) =>
-                element['petID'].toString().contains(widget.petID))
+                element['petId'].toString().contains(widget.petID))
             .map((doc) => InfoSheet.fromJson(doc.data()))
             .toList());
   }

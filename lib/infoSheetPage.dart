@@ -100,7 +100,7 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 print(snapshot.error);
-                return const Text('Something Went Wrong');
+                return Text('Something Went Wrong ${snapshot.error}');
               } else if (snapshot.hasData) {
                 final info = snapshot.data!;
 
@@ -494,182 +494,33 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  (info.petKind == 'Dog')
-                      ? Column(
-                          children: [
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_distemper,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Distemper',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              dense: true,
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              contentPadding: const EdgeInsets.all(0),
-                              leading: Checkbox(
-                                value: info.vacRecord_hepatitis,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Canine Hepatitis',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_parvovirus,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Canine Parvovirus',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_rabies,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Rabies',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_kennelCough,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Kennel Cough',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_felinedistemper,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Feline Distemper',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              dense: true,
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              contentPadding: const EdgeInsets.all(0),
-                              leading: Checkbox(
-                                value: info.vacRecord_rhinotracheitis,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Rhinotracheitis',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_calicvirus,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Calicvirus',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                            Center(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              minVerticalPadding: 0,
-                              horizontalTitleGap: 0,
-                              dense: true,
-                              leading: Checkbox(
-                                value: info.vacRecord_rabies,
-                                onChanged: (value) {},
-                              ),
-                              title: const Text(
-                                'Rabies',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                          ],
-                        )
+                  Flexible(
+                      child: ListView(
+                          children: info.vaccines.map(buildVaccines).toList())),
                 ],
               )),
         ],
       ),
     );
+  }
+
+  Widget buildVaccines(Vaccine vaccine) {
+    return Center(
+        child: ListTile(
+      contentPadding: const EdgeInsets.all(0),
+      minVerticalPadding: 0,
+      horizontalTitleGap: 0,
+      dense: true,
+      leading: Checkbox(
+        value: vaccine.isVaccinated,
+        onChanged: (value) {},
+      ),
+      title: Text(
+        vaccine.recordName,
+        style: const TextStyle(
+            fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+    ));
   }
 
   Stream<List<InfoSheet>> readInformationSheet() {
@@ -678,7 +529,7 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .where((QueryDocumentSnapshot<Object?> element) =>
-                element['petID'].toString().contains(petID))
+                element['petId'].toString().contains(petID))
             .map((doc) => InfoSheet.fromJson(doc.data()))
             .toList());
   }

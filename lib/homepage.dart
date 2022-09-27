@@ -50,7 +50,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             stream: readInfoPage(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return const Text('Something Went Wrong');
+                return Text('Something Went Wrong ${snapshot.error}');
               } else if (snapshot.hasData) {
                 final pets = snapshot.data!;
                 if (pets.isNotEmpty) {
