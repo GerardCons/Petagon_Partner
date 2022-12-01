@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 class InfoSheet {
   String infoID;
   String ownerID;
@@ -7,7 +5,6 @@ class InfoSheet {
   String email;
   String petID;
   String petImageUrl;
-  int age;
   int pendingReports;
   bool isVaccinated;
   bool isVerified;
@@ -17,7 +14,7 @@ class InfoSheet {
   String petBreed;
   String petGender;
   String petDOB;
-  final String firstname;
+  String firstname;
   final String lastname;
   final String mobile;
   final String address;
@@ -35,7 +32,6 @@ class InfoSheet {
     this.petBreed = '',
     this.petGender = '',
     this.petDOB = '',
-    this.age = 0,
     this.pendingReports = 0,
     this.isVaccinated = false,
     this.isVerified = false,
@@ -58,7 +54,6 @@ class InfoSheet {
         'address': address,
         'petID': petID,
         'petImageUrl': petImageUrl,
-        'age': age,
         'pendingReports': pendingReports,
         'isVaccinated': isVaccinated,
         'isVerified': isVerified,
@@ -72,27 +67,35 @@ class InfoSheet {
       };
 
   static InfoSheet fromJson(Map<String, dynamic> json) => InfoSheet(
-      infoID: json['infoID'],
-      ownerID: json['ownerID'],
+      infoID: json['infoId'],
+      ownerID: json['ownerId'],
       firstname: json['firstName'],
-      ownerImageUrl: json['imageUrl'],
+      ownerImageUrl: json['ownerImageUrl'],
       lastname: json['lastName'],
       email: json['email'],
       mobile: json['contactNumber'],
       address: json['address'],
       petID: json['petId'],
       petImageUrl: json['petImageUrl'],
-      age: json['age'],
       pendingReports: json['pendingReports'],
       isVaccinated: json['isVaccinated'],
       isVerified: json['isVerified'],
-      isPCCIRegistered: json['isPCCIRegistered'],
+      isPCCIRegistered: json['isPcciRegistered'],
       petName: json['petName'],
       petKind: json['petKind'],
       petBreed: json['petBreed'],
       petGender: json['petGender'],
-      petDOB: json['petDOB'],
+      petDOB: json['petDateOfBirth'],
       vaccines: Vaccine.fromJsonArray(json['vaccineRecords']));
+
+  static List<InfoSheet> fromJsonArray(List<dynamic> jsonArray) {
+    List<InfoSheet> infoSheetFromJson = [];
+
+    jsonArray.forEach((jsonData) {
+      infoSheetFromJson.add(InfoSheet.fromJson(jsonData));
+    });
+    return infoSheetFromJson;
+  }
 }
 
 class Vaccine {
@@ -103,7 +106,7 @@ class Vaccine {
 
   factory Vaccine.fromJson(Map<String, dynamic> json) {
     return Vaccine(
-        isVaccinated: json['isVaccinated'], recordName: json['recordName']);
+        isVaccinated: json['isVaccinated'], recordName: json['vaccineName']);
   }
 
   static List<Vaccine> fromJsonArray(List<dynamic> jsonArray) {

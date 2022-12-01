@@ -15,6 +15,27 @@ class CheckQrPage extends StatefulWidget {
 }
 
 class _CheckQrPageState extends State<CheckQrPage> {
+  List<dynamic> petData = [];
+  String documentId = "";
+  void getClinicData() async {
+    final clinicAccount = await FirebaseFirestore.instance
+        .collection('Place Directory')
+        .where('name', isEqualTo: widget.partnerName)
+        .get();
+    documentId = clinicAccount.docs.first.id;
+    if (clinicAccount.docs.isNotEmpty) {
+      for (var doc in clinicAccount.docs) {
+        Map<String, dynamic> data = doc.data();
+        petData = data['petInfo'];
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getClinicData();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -48,43 +69,46 @@ class _CheckQrPageState extends State<CheckQrPage> {
                     InkWell(
                       onTap: () async {
                         final docInfo = FirebaseFirestore.instance
-                            .collection(widget.partnerName)
-                            .doc(pet.first.petID);
+                            .collection("Place Directory")
+                            .doc(documentId);
 
                         List<dynamic> vaccines = [];
                         String isVaccinated = 'isVaccinated';
-                        String recordName = 'recordName';
+                        String recordName = 'vaccineName';
                         for (int i = 0; i < pet.first.vaccines.length; i++) {
                           vaccines.add({
                             isVaccinated: pet.first.vaccines[i].isVaccinated,
                             recordName: pet.first.vaccines[i].recordName,
                           });
                         }
+
                         final infoSheet = {
-                          "infoID": pet.first.infoID,
-                          "ownerID": pet.first.ownerID,
+                          "infoId": pet.first.infoID,
+                          "ownerId": pet.first.ownerID,
                           "firstName": pet.first.firstname,
-                          "imageUrl": pet.first.ownerImageUrl,
+                          "ownerImageUrl": pet.first.ownerImageUrl,
                           "lastName": pet.first.lastname,
                           "email": pet.first.email,
                           "contactNumber": pet.first.mobile,
                           "address": pet.first.address,
                           "petId": pet.first.petID,
                           "petImageUrl": pet.first.petImageUrl,
-                          "age": pet.first.age,
                           "pendingReports": pet.first.pendingReports,
                           "isVaccinated": pet.first.isVaccinated,
                           "isVerified": pet.first.isVerified,
-                          "isPCCIRegistered": pet.first.isPCCIRegistered,
+                          "isPcciRegistered": pet.first.isPCCIRegistered,
                           "petName": pet.first.petName,
                           "petKind": pet.first.petKind,
                           "petBreed": pet.first.petBreed,
                           "petGender": pet.first.petGender,
-                          "petDOB": pet.first.petDOB,
+                          "petDateOfBirth": pet.first.petDOB,
                           "vaccineRecords": vaccines,
                         };
 
-                        await docInfo.set(infoSheet);
+                        petData.add(infoSheet);
+                        final clinicPetData = {'petInfo': petData};
+                        await docInfo.update(clinicPetData);
+
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => HomePageScreen(
                                   partnerName: widget.partnerName,

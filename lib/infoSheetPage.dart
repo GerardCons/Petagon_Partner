@@ -100,7 +100,7 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 print(snapshot.error);
-                return Text('Something Went Wrong ${snapshot.error}');
+                return Text('Something Went Wrong $snapshot.error');
               } else if (snapshot.hasData) {
                 final info = snapshot.data!;
 
@@ -136,7 +136,7 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
                         child: Image.network(info.petImageUrl),
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 10),
                     const Text(
                       'CONTACT PERSON',
                       style: TextStyle(
@@ -217,9 +217,11 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          info.address,
-                          style: const TextStyle(fontSize: 12),
+                        Flexible(
+                          child: Text(
+                            info.address,
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ),
                       ],
                     ),
@@ -245,9 +247,11 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text(
-                          info.petDOB,
-                          style: const TextStyle(fontSize: 14),
+                        Flexible(
+                          child: Text(
+                            info.petDOB,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
@@ -339,40 +343,14 @@ class _InfoSheetPageState extends State<InfoSheetPage> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      (info.age == 0)
-                          ? const Text(
-                              '< 1',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                              ),
-                            )
-                          : Text(
-                              info.age.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                              ),
-                            ),
-                      const Text(
-                        " / ",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        info.petBreed,
+                  Center(
+                    child: Text(info.petBreed,
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.black,
-                        ),
-                      ),
-                    ],
+                        )),
                   ),
-                  const SizedBox(height: 45),
+                  const SizedBox(height: 35),
                   Row(
                     children: [
                       (info.isVaccinated == false)

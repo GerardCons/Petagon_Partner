@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petagon_admin/infoSheetPage.dart';
+import 'package:petagon_admin/main.dart';
 import 'package:petagon_admin/model/infosheet.dart';
+import 'package:petagon_admin/model/partner.dart';
 import 'package:petagon_admin/qr_scanner.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePageScreen extends StatefulWidget {
   final String partnerName;
@@ -13,10 +18,46 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  int numberOfPets = 0;
+  List<dynamic> petData = [];
+  String documentId = "";
+  _signOut() async {
+    await FirebaseAuth.instance.signOut();
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  void getClinicData() async {
+    final clinicAccount = await FirebaseFirestore.instance
+        .collection('Place Directory')
+        .where('name', isEqualTo: widget.partnerName)
+        .get();
+    documentId = clinicAccount.docs.first.id;
+    if (clinicAccount.docs.isNotEmpty) {
+      for (var doc in clinicAccount.docs) {
+        Map<String, dynamic> data = doc.data();
+        petData = data['petInfo'];
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getClinicData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: _signOut,
+              icon: const FaIcon(
+                FontAwesomeIcons.doorOpen,
+                color: Colors.white,
+              )),
+        ],
         backgroundColor: Colors.blue.shade600,
         foregroundColor: Colors.white,
         title: Center(
@@ -46,15 +87,42 @@ class _HomePageScreenState extends State<HomePageScreen> {
             }),
       ),
       body: SafeArea(
-        child: StreamBuilder<List<InfoSheet>>(
+        child: StreamBuilder<List<Partners>>(
             stream: readInfoPage(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Text('Something Went Wrong ${snapshot.error}');
               } else if (snapshot.hasData) {
                 final pets = snapshot.data!;
+                numberOfPets = pets.first.petInfo.length;
+                List<InfoSheet> petList = pets.first.petInfo;
                 if (pets.isNotEmpty) {
-                  return ListView(children: pets.map(buildPets).toList());
+                  return ListView.builder(
+                    itemCount: numberOfPets,
+                    itemBuilder: (context, index) {
+                      final pet = pets.first.petInfo[index];
+
+                      return Slidable(
+                          endActionPane: ActionPane(
+                            motion: BehindMotion(),
+                            children: [
+                              SlidableAction(
+                                  backgroundColor: Colors.red,
+                                  icon: Icons.delete,
+                                  label: 'Remove',
+                                  onPressed: ((context) async {
+                                    petList.removeAt(index);
+                                    final docInfo = FirebaseFirestore.instance
+                                        .collection("Place Directory")
+                                        .doc(documentId);
+                                    final clinicPetData = {'petInfo': petList};
+                                    await docInfo.update(clinicPetData);
+                                  }))
+                            ],
+                          ),
+                          child: buildPets(pet));
+                    },
+                  );
                 } else {
                   return Container();
                 }
@@ -146,12 +214,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
       ));
 
-  Stream<List<InfoSheet>> readInfoPage() {
+  Stream<List<Partners>> readInfoPage() {
     return FirebaseFirestore.instance
-        .collection(widget.partnerName)
+        .collection("Place Directory")
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => InfoSheet.fromJson(doc.data()))
+            .where((QueryDocumentSnapshot<Object?> element) =>
+                element['name'].toString().contains(widget.partnerName))
+            .map((doc) => Partners.fromJson(doc.data()))
             .toList());
   }
 }
